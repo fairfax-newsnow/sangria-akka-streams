@@ -138,10 +138,10 @@ class AkkStreamsIntegrationSpec extends WordSpec with Matchers {
     }
   }
 
-  def source[T](elems: T*): Source[T, NotUsed] =
+  def source[T](elems: T*): Source[T, Any] =
     Source.fromIterator(() ⇒ Iterator(elems: _*))
 
-  def res[T](s: Source[T, NotUsed]) =
+  def res[T](s: Source[T, Any]) =
     Await.result(s.runFold(List.empty[T]){case (acc, e) ⇒ acc :+ e}, 2 seconds)
 
   def res[T](f: Future[T]) =
