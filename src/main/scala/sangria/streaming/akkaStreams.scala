@@ -11,7 +11,7 @@ import akka.stream.stage.{GraphStageLogic, InHandler, OutHandler}
 import scala.concurrent.Future
 
 object akkaStreams {
-  type AkkaSource[+T] = Source[T, Any]
+  type AkkaSource[+T] = Source[T, AnyRef]
 
   class AkkaStreamsSubscriptionStream(implicit materializer: Materializer) extends SubscriptionStream[AkkaSource] {
     def supported[T[_]](other: SubscriptionStream[T]) = other.isInstanceOf[AkkaStreamsSubscriptionStream]
