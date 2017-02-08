@@ -53,8 +53,8 @@ object akkaStreams {
 
   implicit def akkaSubscriptionStream(implicit materializer: Materializer): SubscriptionStream[AkkaSource] = new AkkaStreamsSubscriptionStream
 
-  implicit def akkaStreamIsValidSubscriptionStream[A[_, _], Ctx, Res, Out](implicit materializer: Materializer, ev1: ValidOutStreamType[Res, Out]): SubscriptionStreamLike[Source[A[Ctx, Res], Any], A, Ctx, Res, Out] =
-    new SubscriptionStreamLike[Source[A[Ctx, Res], Any], A, Ctx, Res, Out] {
+  implicit def akkaStreamIsValidSubscriptionStream[A[_, _], F, Ctx, Res, Out](implicit materializer: Materializer, ev1: ValidOutStreamType[Res, Out]): SubscriptionStreamLike[Source[A[Ctx, Res], F], A, Ctx, Res, Out] =
+    new SubscriptionStreamLike[Source[A[Ctx, Res], F], A, Ctx, Res, Out] {
       type StreamSource[X] = AkkaSource[X]
       val subscriptionStream = new AkkaStreamsSubscriptionStream
     }
