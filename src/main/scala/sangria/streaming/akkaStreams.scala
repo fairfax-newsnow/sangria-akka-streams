@@ -2,11 +2,11 @@ package sangria.streaming
 
 import scala.language.higherKinds
 import akka.NotUsed
+import akka.event.Logging
 import akka.stream.ActorAttributes.SupervisionStrategy
-import akka.stream.{Attributes, Materializer, Supervision}
-import akka.stream.impl.fusing.GraphStages.SimpleLinearGraphStage
+import akka.stream._
 import akka.stream.scaladsl.{Merge, Sink, Source}
-import akka.stream.stage.{GraphStageLogic, InHandler, OutHandler}
+import akka.stream.stage.{GraphStage, GraphStageLogic, InHandler, OutHandler}
 
 import scala.concurrent.Future
 
@@ -59,7 +59,11 @@ object akkaStreams {
       val subscriptionStream = new AkkaStreamsSubscriptionStream
     }
 
-  private final case class OnComplete[T](op: () ⇒ Unit) extends SimpleLinearGraphStage[T] {
+  private final case class OnComplete[T](op: () ⇒ Unit) extends GraphStage[FlowShape[T, T]] {
+    val in = Inlet[T](Logging.simpleName(this) + ".in")
+    val out = Outlet[T](Logging.simpleName(this) + ".out")
+    override val shape = FlowShape(in, out)
+
     override def toString: String = "OnComplete"
 
     override def createLogic(inheritedAttributes: Attributes): GraphStageLogic =
